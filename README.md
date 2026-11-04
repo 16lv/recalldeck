@@ -1,5 +1,7 @@
 # University Study & SM-2 Revision Planner
 
+![CI Status](https://github.com/16lv/study-planner/actions/workflows/ci.yml/badge.svg)
+
 A full-stack academic module, assessment deadline, and **SuperMemo-2 (SM-2)** spaced-repetition revision planner built with **Python 3.12**, **FastAPI**, **SQLite**, and a responsive browser workspace.
 
 ## Overview
