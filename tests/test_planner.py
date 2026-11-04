@@ -29,6 +29,11 @@ def test_sm2_spaced_repetition_interval_progression() -> None:
     assert reset_int == 1
 
 
+def test_sm2_easiness_floor_never_drops_below_1_3() -> None:
+    _, ef, _ = compute_sm2_schedule(quality=0, repetitions=3, easiness=1.35, interval_days=10)
+    assert ef >= 1.3
+
+
 def test_full_module_assessment_and_revision_workflow() -> None:
     db = PlannerDatabase(":memory:")
     client = TestClient(create_app(db))
@@ -44,6 +49,10 @@ def test_full_module_assessment_and_revision_workflow() -> None:
     )
     assert mod_resp.status_code == 201
     assert mod_resp.json()["code"] == "CM2102"
+
+    modules_list = client.get("/api/modules")
+    assert modules_list.status_code == 200
+    assert len(modules_list.json()) == 1
 
     ass_resp = client.post(
         "/api/assessments",
