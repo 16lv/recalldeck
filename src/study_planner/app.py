@@ -35,10 +35,8 @@ def compute_sm2_schedule(
     easiness: float,
     interval_days: int,
 ) -> tuple[int, float, int]:
-    """
-    SuperMemo-2 (SM-2) spaced-repetition interval calculator for university revision topics.
-    Returns (new_repetitions, new_easiness, next_interval_days).
-    """
+    # SuperMemo-2 (SM-2) formula: grades < 3 reset the interval back to 1 day.
+    # Easiness factor is clamped at 1.3 so intervals don't get stuck shrinking forever.
     if quality < 0 or quality > 5:
         raise ValueError("SM-2 quality rating must be between 0 and 5")
 
