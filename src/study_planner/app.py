@@ -3,7 +3,7 @@ from __future__ import annotations
 import sqlite3
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
@@ -61,8 +61,11 @@ class PlannerDatabase:
     def __init__(self, db_path: str | Path = ":memory:") -> None:
         self._conn = sqlite3.connect(str(db_path), check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
+        self._conn.execute("PRAGMA foreign_keys = ON;")
         self._conn.executescript(
             """
+            PRAGMA foreign_keys = ON;
+
             CREATE TABLE IF NOT EXISTS modules (
                 code TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
@@ -93,6 +96,15 @@ class PlannerDatabase:
             """
         )
         self._conn.commit()
+
+    def close(self) -> None:
+        self._conn.close()
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(self, exc_type: object, exc_val: object, exc_tb: object) -> None:
+        self.close()
 
     def create_module(self, payload: ModuleCreate) -> dict[str, Any]:
         code = payload.code.upper()
@@ -227,9 +239,9 @@ class PlannerDatabase:
 
 
 def create_app(db: PlannerDatabase | None = None) -> FastAPI:
-    active_db = db or PlannerDatabase("study_planner.db")
+    active_db = db or PlannerDatabase("recalldeck.db")
     app = FastAPI(
-        title="University Study & Revision Planner",
+        title="RecallDeck — University Study & SM-2 Revision Planner",
         version="1.0.0",
     )
 
@@ -239,7 +251,7 @@ def create_app(db: PlannerDatabase | None = None) -> FastAPI:
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Study Planner · University Module & SM-2 Revision Workspace</title>
+  <title>RecallDeck · University Module & SM-2 Revision Workspace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body { background: #0a0a0c; color: #e8e6e1; font-family: system-ui, sans-serif; margin: 0; padding: 2.5rem; }
@@ -255,7 +267,7 @@ def create_app(db: PlannerDatabase | None = None) -> FastAPI:
 </head>
 <body>
   <div class="container">
-    <h1>University Study &amp; SM-2 Revision Planner</h1>
+    <h1>RecallDeck — University Study &amp; SM-2 Revision Planner</h1>
     <p class="sub">FastAPI · SQLite · SuperMemo-2 Spaced Repetition · REST API (/docs)</p>
     <div class="grid">
       <div class="card">
