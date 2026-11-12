@@ -1,8 +1,8 @@
-# RecallDeck
+# SM-2 Study Planner (sm2-study-planner)
 
-![CI Status](https://github.com/16lv/recalldeck/actions/workflows/ci.yml/badge.svg)
+![CI Status](https://github.com/16lv/sm2-study-planner/actions/workflows/ci.yml/badge.svg)
 
-**RecallDeck** is a university module tracker, weighted coursework deadline manager, and **SuperMemo-2 (SM-2)** spaced-repetition revision scheduler built with **Python 3.12**, **FastAPI**, and **SQLite**.
+**SM-2 Study Planner** ($(System.Collections.Hashtable.newRepo)) is a university module tracker, weighted coursework deadline manager, and **SuperMemo-2 (SM-2)** spaced-repetition revision scheduler built with **Python 3.12**, **FastAPI**, and **SQLite**.
 
 ## Why I Built It
 
